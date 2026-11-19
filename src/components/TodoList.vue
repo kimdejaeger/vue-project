@@ -17,7 +17,10 @@ watch(
 // Taak toevoegen
 const taakToevoegen = (taak) => {
   if (taak.trim() !== "") {
-    taken.value.push(taak.trim());
+    taken.value.push({
+      tekst: taak.trim(),
+      afgerond: false,
+    });
     nieuweTaak.value = "";
   }
 };
@@ -36,6 +39,7 @@ const taakVerwijderen = (index) => {
         <h1 class="text-3xl font-bold text-slate-800">Mijn takenlijst</h1>
         <p class="text-slate-600 mt-2">Houd je taken bij en blijf georganiseerd.</p>
       </div>
+
       <!-- Input veld en knop voor het toevoegen van taken -->
       <div class="flex gap-3 mb-6">
         <input
@@ -51,13 +55,20 @@ const taakVerwijderen = (index) => {
         <h2 class="text-lg font-semibold text-slate-800">Mijn taken</h2>
         <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full"> {{ taken.length }} taken </span>
       </div>
+
       <!-- Takenlijst -->
       <ul v-if="taken.length > 0" class="space-y-3">
         <li v-for="(taak, index) in taken" :key="index" class="flex items-center justify-between gap-4 bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 hover:border-blue-300 transition">
           <div class="flex items-center gap-3 min-w-0">
-            <span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
-            <span class="text-slate-800 break-words">{{ taak }}</span>
+            <!-- Checkbox om een taak af te vinken -->
+            <input type="checkbox" v-model="taak.afgerond" class="w-5 h-5 accent-blue-600 cursor-pointer" />
+
+            <!-- Taaktekst -->
+            <span class="text-slate-800 break-words" :class="{ 'line-through text-slate-400': taak.afgerond }">
+              {{ taak.tekst }}
+            </span>
           </div>
+
           <!-- Verwijderknop voor elke taak -->
           <button @click="taakVerwijderen(index)" class="text-red-600 hover:bg-red-50 font-medium text-sm px-3 py-2 rounded-lg transition shrink-0">Verwijderen</button>
         </li>
